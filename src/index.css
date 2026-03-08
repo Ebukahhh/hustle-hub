@@ -26,3 +26,165 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #FF0066;
 }
+
+/* ── Spline Hero ────────────────────────────────── */
+:root {
+  --hero-height: 100vh;
+  --hero-height: 100dvh; /* progressive enhancement for mobile */
+  --color-accent: #FF0066;
+  --color-text: #1A1A1A;
+}
+
+.spline-hero {
+  position: relative;
+  width: 100%;
+  height: var(--hero-height);
+  overflow: hidden;
+}
+
+.spline-hero__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.spline-hero__canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Loader */
+.spline-hero__loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: #F6F4F7;
+  z-index: 5;
+}
+
+.spline-hero__spinner {
+  width: 48px;
+  height: 48px;
+}
+
+.spline-hero__spinner-ring {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.06);
+  border-top-color: var(--color-accent);
+  animation: hero-spin 1s linear infinite;
+}
+
+@keyframes hero-spin {
+  to { transform: rotate(360deg); }
+}
+
+.spline-hero__loader-text {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(26, 26, 26, 0.5);
+  font-weight: 500;
+}
+
+/* Overlay */
+.spline-hero__overlay {
+  position: absolute;
+  bottom: 40px;
+  left: 24px;
+  right: 24px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .spline-hero__overlay {
+    left: 40px;
+    right: 40px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+}
+
+.spline-hero__info-card,
+.spline-hero__details-card {
+  pointer-events: auto;
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  background: rgba(255, 255, 255, 0.4);
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.spline-hero__info-card {
+  max-width: 360px;
+}
+
+.spline-hero__tagline {
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.spline-hero__detail-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-text);
+}
+
+.spline-hero__detail-row + .spline-hero__detail-row {
+  margin-top: 16px;
+}
+
+.spline-hero__detail-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  color: var(--color-accent);
+}
+
+.spline-hero__detail-label {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* Scroll indicator */
+.spline-hero__scroll-hint {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  color: rgba(26, 26, 26, 0.4);
+}
+
+/* Accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .spline-hero__spinner-ring {
+    animation: none;
+    border-top-color: rgba(0, 0, 0, 0.15);
+  }
+
+  .spline-hero__scroll-hint {
+    display: none;
+  }
+}

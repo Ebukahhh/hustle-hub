@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spline Vanilla Embed Example</title>
+  <!-- Import the Spline Viewer Web Component -->
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.58/build/spline-viewer.js"></script>
+  <style>
+    /* Reset margins and set container to full viewport */
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #1a1a1a;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+    .loading-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-text">Loading 3D Scene...</div>
+  
+  <!-- Use the custom element with a sample scene URL -->
+  <spline-viewer url="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"></spline-viewer>
+
+  <script>
+    const viewer = document.querySelector('spline-viewer');
+    
+    // Example: Listening for when the scene is loaded
+    viewer.addEventListener('load', () => {
+      console.log('Spline scene fully loaded!');
+    });
+  </script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { MapPin, Calendar, ArrowRight, Sparkles, TrendingUp, Users, ShoppingBag, QrCode } from 'lucide-react';
+import { ArrowRight, Sparkles, TrendingUp, Users, ShoppingBag, QrCode } from 'lucide-react';
+import SplineHero from './components/SplineHero';
 
 const Navbar = () => {
   return (
@@ -13,48 +14,6 @@ const Navbar = () => {
         <span className="font-bold text-[#1A1A1A] tracking-widest uppercase text-sm pr-2">Hustle Hub</span>
       </div>
     </nav>
-  );
-};
-
-const HeroPlaceholder = () => {
-  return (
-    <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
-      {/* 3D Asset Container */}
-      <div className="absolute inset-0 z-0 flex items-center justify-center">
-         <div className="w-full h-full bg-transparent flex flex-col items-center justify-center relative overflow-hidden">
-            <motion.div 
-              animate={{ rotate: 360 }} 
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="w-32 h-32 border-2 border-black/5 rounded-full border-t-[#FF0066] mb-6"
-            />
-            <p className="text-[#1A1A1A]/60 font-mono text-sm uppercase tracking-widest bg-white/50 px-6 py-3 rounded-full backdrop-blur-md border border-white/50 shadow-sm">
-              [ 3D Asset Canvas Area ]
-            </p>
-            <p className="text-[#1A1A1A]/40 text-xs mt-4 max-w-xs text-center font-medium">
-              Embed your Spline scene here. It will fill this space and act as the hero background.
-            </p>
-         </div>
-      </div>
-      
-      {/* Overlay Text */}
-      <div className="z-10 absolute bottom-10 left-6 right-6 md:left-10 md:right-10 flex flex-col md:flex-row justify-between items-start md:items-end pointer-events-none gap-6">
-         <div className="pointer-events-auto backdrop-blur-xl bg-white/40 p-6 rounded-3xl border border-white/60 shadow-xl max-w-sm">
-           <p className="text-lg font-medium text-[#1A1A1A] leading-relaxed">
-             The ultimate campus trade fair by Pentecost University Comm. Studies.
-           </p>
-         </div>
-         <div className="flex flex-col items-start md:items-end text-left md:text-right pointer-events-auto backdrop-blur-xl bg-white/40 p-6 rounded-3xl border border-white/60 shadow-xl">
-            <div className="flex items-center gap-3 text-[#1A1A1A] mb-4">
-               <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm"><MapPin size={18} className="text-[#FF0066]" /></div>
-               <span className="font-semibold text-lg">Pentecost University</span>
-            </div>
-            <div className="flex items-center gap-3 text-[#1A1A1A]">
-               <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm"><Calendar size={18} className="text-[#FF0066]" /></div>
-               <span className="font-semibold text-lg">Nov 15-17, 2026</span>
-            </div>
-         </div>
-      </div>
-    </section>
   );
 };
 
@@ -112,8 +71,17 @@ const CountdownSection = () => {
 
 const CredibilitySection = () => {
   return (
-    <section className="py-32 px-6 md:px-10 bg-[#1A1A1A] text-white rounded-[3rem] md:rounded-[5rem] mx-4 md:mx-10 my-10 shadow-2xl">
-      <div className="max-w-7xl mx-auto">
+    <section
+      className="py-32 px-6 md:px-10 text-white rounded-[3rem] md:rounded-[5rem] mx-4 md:mx-10 my-10 shadow-2xl relative overflow-hidden"
+      style={{
+        backgroundImage: 'url(/credibility-bg.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-black/70 rounded-[3rem] md:rounded-[5rem]" aria-hidden="true" />
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -223,12 +191,12 @@ const GalleryItem = ({ img1, img2, aspect, index }: { key?: number | string, img
 
 const GallerySection = () => {
   const imagePairs = [
-    { src1: "https://picsum.photos/seed/hustle1/800/1000", src2: "https://picsum.photos/seed/hustle1b/800/1000", aspect: "aspect-[4/5]" },
-    { src1: "https://picsum.photos/seed/hustle2/800/800", src2: "https://picsum.photos/seed/hustle2b/800/800", aspect: "aspect-square" },
-    { src1: "https://picsum.photos/seed/hustle3/800/1200", src2: "https://picsum.photos/seed/hustle3b/800/1200", aspect: "aspect-[2/3]" },
-    { src1: "https://picsum.photos/seed/hustle4/800/900", src2: "https://picsum.photos/seed/hustle4b/800/900", aspect: "aspect-[4/5]" },
-    { src1: "https://picsum.photos/seed/hustle5/800/1000", src2: "https://picsum.photos/seed/hustle5b/800/1000", aspect: "aspect-[4/5]" },
-    { src1: "https://picsum.photos/seed/hustle6/800/800", src2: "https://picsum.photos/seed/hustle6b/800/800", aspect: "aspect-square" },
+    { src1: "/gallery/gallery-1.jpg", src2: "/gallery/gallery-1b.jpg", aspect: "aspect-[4/5]" },
+    { src1: "/gallery/gallery-2.jpg", src2: "/gallery/gallery-2b.jpg", aspect: "aspect-square" },
+    { src1: "/gallery/gallery-3.jpg", src2: "/gallery/gallery-3b.jpg", aspect: "aspect-[2/3]" },
+    { src1: "/gallery/gallery-4.jpg", src2: "/gallery/gallery-4b.jpg", aspect: "aspect-[4/5]" },
+    { src1: "/gallery/gallery-5.jpg", src2: "/gallery/gallery-5b.jpg", aspect: "aspect-[4/5]" },
+    { src1: "/gallery/gallery-6.jpg", src2: "/gallery/gallery-6b.jpg", aspect: "aspect-square" },
   ];
 
   return (
@@ -256,67 +224,62 @@ const GallerySection = () => {
 const CtaSection = () => {
   return (
     <section className="py-24 px-6 md:px-10 pb-32">
-      <div className="max-w-7xl mx-auto bg-white rounded-[3rem] p-8 md:p-20 text-[#1A1A1A] relative overflow-hidden flex flex-col items-center text-center shadow-2xl border border-white/60">
-        {/* Abstract shapes */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#FF0066] rounded-full mix-blend-multiply filter blur-[150px] opacity-10 translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-yellow-400 rounded-full mix-blend-multiply filter blur-[120px] opacity-10 -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
+      <div className="max-w-7xl mx-auto bg-[#1A1A1A] rounded-[3rem] text-white relative flex flex-col md:flex-row overflow-hidden shadow-2xl border border-white/10">
         
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-[15vw] md:text-[10rem] font-bold tracking-tighter leading-[0.85] mb-6 font-display relative z-10"
-        >
-          Join the<br/>Hustle.
-        </motion.h2>
-        
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="text-xl text-[#1A1A1A]/70 mb-16 max-w-2xl relative z-10 font-medium"
-        >
-          Secure your spot as a vendor or attendee today.
-        </motion.p>
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="flex flex-col md:flex-row gap-4 relative z-10 w-full max-w-4xl justify-center"
-        >
-          <input 
-            type="text" 
-            placeholder="Your Name" 
-            className="bg-[#F6F4F7] border border-black/5 rounded-full px-8 py-5 text-lg focus:outline-none focus:border-[#FF0066] transition-colors w-full md:w-1/3 placeholder:text-black/30"
+        {/* Left Side: Full Image */}
+        <div className="md:w-1/2 relative bg-[#F6F4F7] flex items-center justify-center p-8 min-h-[400px]">
+          <img 
+            src="/cta-bg.jpg" 
+            alt="Hustle Hub Team" 
+            className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700"
           />
-          <input 
-            type="email" 
-            placeholder="Email Address" 
-            className="bg-[#F6F4F7] border border-black/5 rounded-full px-8 py-5 text-lg focus:outline-none focus:border-[#FF0066] transition-colors w-full md:w-1/3 placeholder:text-black/30"
-          />
-          <button className="bg-[#FF0066] text-white rounded-full px-10 py-5 text-lg font-bold hover:bg-[#1A1A1A] transition-all duration-300 flex items-center justify-center gap-2 w-full md:w-1/3 hover:scale-105 shadow-lg shadow-pink-500/30">
-            Register Now <ArrowRight size={20} />
-          </button>
-        </motion.div>
+        </div>
 
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
-          className="mt-20 flex flex-col md:flex-row items-center gap-6 relative z-10 p-2 pr-6 bg-[#F6F4F7] border border-black/5 rounded-full"
-        >
-          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shrink-0 shadow-sm">
-            <QrCode size={32} className="text-[#FF0066]" />
-          </div>
-          <div className="text-left pb-4 md:pb-0">
-            <h4 className="font-bold text-lg leading-tight">Scan to Share</h4>
-            <p className="text-[#1A1A1A]/50 text-sm font-medium">Find this on campus flyers</p>
-          </div>
-        </motion.div>
+        {/* Right Side: CTA Content */}
+        <div className="md:w-1/2 p-8 md:p-16 flex flex-col justify-center items-center md:items-start text-center md:text-left z-10 relative">
+          <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#FF0066] rounded-full mix-blend-screen filter blur-[150px] opacity-20 pointer-events-none"></div>
+          
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-[12vw] md:text-[6rem] font-bold tracking-tighter leading-none mb-6 font-display"
+          >
+            Join the<br/>Hustle.
+          </motion.h2>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-xl text-white/70 mb-10 max-w-md font-medium"
+          >
+            Secure your spot as a vendor or attendee today.
+          </motion.p>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="flex flex-col gap-4 w-full"
+          >
+            <input 
+              type="text" 
+              placeholder="Your Name" 
+              className="bg-white/5 border border-white/10 rounded-full px-8 py-5 text-lg focus:outline-none focus:border-[#FF0066] transition-colors w-full placeholder:text-white/30 text-white backdrop-blur-md"
+            />
+            <input 
+              type="email" 
+              placeholder="Email Address" 
+              className="bg-white/5 border border-white/10 rounded-full px-8 py-5 text-lg focus:outline-none focus:border-[#FF0066] transition-colors w-full placeholder:text-white/30 text-white backdrop-blur-md"
+            />
+            <button className="bg-[#FF0066] text-white rounded-full px-10 py-5 text-lg font-bold hover:bg-white hover:text-[#1A1A1A] transition-all duration-300 flex items-center justify-center gap-2 w-full mt-2 shadow-[0_0_30px_rgba(255,0,102,0.4)] hover:scale-[1.02]">
+              Register Now <ArrowRight size={20} />
+            </button>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -350,7 +313,7 @@ export default function App() {
     <div className="min-h-screen bg-[#F6F4F7] text-[#1A1A1A] font-sans selection:bg-[#FF0066] selection:text-white">
       <Navbar />
       <main>
-        <HeroPlaceholder />
+        <SplineHero />
         <CountdownSection />
         <CredibilitySection />
         <GallerySection />
