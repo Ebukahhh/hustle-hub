@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MapPin, Calendar, ChevronDown } from 'lucide-react';
 
@@ -17,19 +17,36 @@ const LoadingFallback = () => (
 
 export default function SplineHero() {
   const [sceneLoaded, setSceneLoaded] = useState(false);
+  const [shouldLoadSpline, setShouldLoadSpline] = useState(false);
+
+  // Defer Spline loading so the rest of the page renders first
+  useEffect(() => {
+    // Use requestIdleCallback if available, otherwise a small timeout
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(() => setShouldLoadSpline(true), { timeout: 2000 });
+      return () => window.cancelIdleCallback(id);
+    } else {
+      const timer = setTimeout(() => setShouldLoadSpline(true), 300);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   return (
     <section className="spline-hero" aria-label="Hero">
       {/* Spline 3D Scene — fills the entire viewport */}
       <div className="spline-hero__canvas">
-        <Suspense fallback={<LoadingFallback />}>
-          {!sceneLoaded && <LoadingFallback />}
-          <SplineScene
-            scene={SPLINE_SCENE_URL}
-            onLoad={() => setSceneLoaded(true)}
-            style={{ width: '100%', height: '100%' }}
-          />
-        </Suspense>
+        {shouldLoadSpline ? (
+          <Suspense fallback={<LoadingFallback />}>
+            {!sceneLoaded && <LoadingFallback />}
+            <SplineScene
+              scene={SPLINE_SCENE_URL}
+              onLoad={() => setSceneLoaded(true)}
+              style={{ width: '100%', height: '100%' }}
+            />
+          </Suspense>
+        ) : (
+          <LoadingFallback />
+        )}
       </div>
 
       {/* Overlay content at the bottom */}
@@ -58,7 +75,7 @@ export default function SplineHero() {
                 <div className="spline-hero__detail-icon">
                   <Calendar size={18} />
                 </div>
-                <span className="spline-hero__detail-label">Nov 15-17, 2026</span>
+                <span className="spline-hero__detail-label">April 15-17, 2026</span>
               </div>
             </div>
           </motion.div>

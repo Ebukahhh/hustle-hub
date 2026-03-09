@@ -7,8 +7,8 @@
 }
 
 body {
-  background-color: #F6F4F7;
-  color: #1A1A1A;
+  background-color: #FAFAFA;
+  color: #4A2411;
   overflow-x: hidden;
 }
 
@@ -17,22 +17,22 @@ body {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #F6F4F7;
+  background: #FAFAFA;
 }
 ::-webkit-scrollbar-thumb {
   background: #D1D1D1;
   border-radius: 5px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #FF0066;
+  background: #F59E0B;
 }
 
 /* ── Spline Hero ────────────────────────────────── */
 :root {
   --hero-height: 100vh;
   --hero-height: 100dvh; /* progressive enhancement for mobile */
-  --color-accent: #FF0066;
-  --color-text: #1A1A1A;
+  --color-accent: #F59E0B;
+  --color-text: #4A2411;
 }
 
 .spline-hero {
@@ -63,7 +63,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 16px;
-  background: #F6F4F7;
+  background: #FAFAFA;
   z-index: 5;
 }
 
