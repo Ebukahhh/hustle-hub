@@ -75,7 +75,7 @@ export default function SplineHero() {
                 <div className="spline-hero__detail-icon">
                   <Calendar size={18} />
                 </div>
-                <span className="spline-hero__detail-label">April 15-17, 2026</span>
+                <span className="spline-hero__detail-label">April 11, 2026</span>
               </div>
             </div>
           </motion.div>
