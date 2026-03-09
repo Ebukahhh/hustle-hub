@@ -4,7 +4,7 @@ import { MapPin, Calendar, ChevronDown } from 'lucide-react';
 
 const SplineScene = React.lazy(() => import('@splinetool/react-spline'));
 
-const SPLINE_SCENE_URL = 'https://prod.spline.design/Ir5DNOMN7m873Sse/scene.splinecode';
+const SPLINE_SCENE_URL = 'https://draft.spline.design/pCvvbDOV0BauBYRH/scene.splinecode';
 
 const LoadingFallback = () => (
   <div className="spline-hero__loader">
