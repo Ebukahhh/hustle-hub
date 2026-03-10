@@ -230,7 +230,7 @@ const GallerySection = () => {
   );
 };
 
-const FaqItem = ({ question, answer }: { question: string, answer: string }) => {
+const FaqItem = ({ question, answer }: { question: string, answer: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -283,11 +283,34 @@ const FaqSection = () => {
     },
     {
       question: "5. Who can participate in the trade fair?",
-      answer: "Participation is open to students, small business owners, industry stakeholders, and members of the university."
+      answer: (
+        <>
+          <p className="mb-2">Participation is open to:</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>students</li>
+            <li>small business owners</li>
+            <li>industry stakeholders</li>
+            <li>members of the university</li>
+          </ul>
+        </>
+      )
     },
     {
       question: "6. What kinds of businesses or products can be exhibited?",
-      answer: "Participants can showcase different types of businesses such as: Fashion and clothing, Food and snacks, Beauty and skincare products, Creative arts and crafts, Digital or tech services, Handmade items, and Lifestyle products."
+      answer: (
+        <>
+          <p className="mb-2">Participants can showcase different types of businesses such as:</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>fashion and clothing</li>
+            <li>food and snacks</li>
+            <li>beauty and skincare products</li>
+            <li>creative arts and crafts</li>
+            <li>digital or tech services</li>
+            <li>handmade items</li>
+            <li>lifestyle products</li>
+          </ul>
+        </>
+      )
     },
     {
       question: "7. Is the event open to the public?",
@@ -295,11 +318,40 @@ const FaqSection = () => {
     },
     {
       question: "8. Why should I attend The Hustle Hub Trade Fair?",
-      answer: "Attending the trade fair allows you to discover innovative student businesses, support young entrepreneurs, network with creative and business-minded students, and purchase unique products and services."
+      answer: (
+        <>
+          <p className="mb-2">Attending the trade fair allows you to:</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>Discover innovative student businesses</li>
+            <li>Support young entrepreneurs</li>
+            <li>Network with creative and business-minded students</li>
+            <li>Purchase unique products and services</li>
+          </ul>
+        </>
+      )
     },
     {
       question: "9. How can I get more information about the event?",
-      answer: "For more information, please reach out to us at tossoutiti7@gmail.com."
+      answer: (
+        <ul className="space-y-4">
+          <li className="flex flex-col">
+            <span className="text-sm font-bold opacity-70 uppercase tracking-wider">Email</span>
+            <a href="mailto:tossoutiti7@gmail.com" className="font-medium hover:text-[#F59E0B] transition-colors">tossoutiti7@gmail.com</a>
+          </li>
+          <li className="flex flex-col">
+            <span className="text-sm font-bold opacity-70 uppercase tracking-wider">TikTok</span>
+            <span className="font-medium">thehustlehub8</span>
+          </li>
+          <li className="flex flex-col">
+            <span className="text-sm font-bold opacity-70 uppercase tracking-wider">Instagram</span>
+            <span className="font-medium">the_hustle_hub_trade_fair</span>
+          </li>
+          <li className="flex flex-col">
+            <span className="text-sm font-bold opacity-70 uppercase tracking-wider">Call line</span>
+            <span className="font-medium">0551609424</span>
+          </li>
+        </ul>
+      )
     },
     {
       question: "10. What makes The Hustle Hub special?",
@@ -499,9 +551,9 @@ const Footer = () => {
         </div>
 
         <div className="flex gap-6 text-sm font-medium">
-          <a href="#" className="hover:text-[#F59E0B] transition-colors">Instagram</a>
-          <a href="#" className="hover:text-[#F59E0B] transition-colors">Twitter</a>
-          <a href="#" className="hover:text-[#F59E0B] transition-colors">Contact</a>
+          <a href="https://www.instagram.com/the_hustle_hub_trade_fair/" className="hover:text-[#F59E0B] transition-colors">Instagram</a>
+          <a href="https://www.tiktok.com/@thehustlehub8" className="hover:text-[#F59E0B] transition-colors">Tiktok</a>
+          <a href="mailto:[ebukanwora@gmail.com]" className="hover:text-[#F59E0B] transition-colors">Contact</a>
         </div>
       </div>
     </footer>
