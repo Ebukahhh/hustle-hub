@@ -275,7 +275,7 @@ const FaqSection = () => {
     },
     {
       question: "3. Where will the event be held?",
-      answer: "The event will be held at Pentecost University Campus – Sowutuom, Accra."
+      answer: "The event will be held at Pentecost University, Sowutuom campus-Accra."
     },
     {
       question: "4. Who is organizing the event?",
