@@ -1,5 +1,5 @@
-import React, { Suspense, useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { Suspense, useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useInView } from 'motion/react';
 import { MapPin, Calendar, ChevronDown } from 'lucide-react';
 
 const SplineScene = React.lazy(() => import('@splinetool/react-spline'));
@@ -18,6 +18,16 @@ const LoadingFallback = () => (
 export default function SplineHero() {
   const [sceneLoaded, setSceneLoaded] = useState(false);
   const [shouldLoadSpline, setShouldLoadSpline] = useState(false);
+  const containerRef = useRef<HTMLElement>(null);
+  
+  // Only render the scene when it's near the viewport
+  // We use a large margin so it starts loading just before visible,
+  // but unmounts when scrolled far away
+  const isInView = useInView(containerRef, { margin: "200% 0px 200% 0px" });
+  
+  // Track scroll state to disable pointer events on the canvas while scrolling
+  // This drastically reduces raycasting overhead from Spline
+  const [isScrolling, setIsScrolling] = useState(false);
 
   // Defer Spline loading so the rest of the page renders first
   useEffect(() => {
@@ -31,11 +41,32 @@ export default function SplineHero() {
     }
   }, []);
 
+  useEffect(() => {
+    let scrollTimeout: ReturnType<typeof setTimeout>;
+    
+    const handleScroll = () => {
+      setIsScrolling(true);
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        setIsScrolling(false);
+      }, 150); // Resume interaction 150ms after scroll stops
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, []);
+
   return (
-    <section className="spline-hero" aria-label="Hero">
+    <section ref={containerRef} className="spline-hero" aria-label="Hero">
       {/* Spline 3D Scene — fills the entire viewport */}
-      <div className="spline-hero__canvas">
-        {shouldLoadSpline ? (
+      <div 
+        className="spline-hero__canvas"
+        style={{ pointerEvents: isScrolling ? 'none' : 'auto' }}
+      >
+        {shouldLoadSpline && isInView ? (
           <Suspense fallback={<LoadingFallback />}>
             {!sceneLoaded && <LoadingFallback />}
             <SplineScene
