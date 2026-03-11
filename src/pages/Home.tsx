@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Sparkles, TrendingUp, Users, ShoppingBag, MapPin, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowRight, Sparkles, TrendingUp, Users, ShoppingBag, MapPin, Calendar, ChevronDown, ChevronUp, Phone } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import SplineHero from '../components/SplineHero';
 
@@ -401,136 +402,91 @@ const FaqSection = () => {
 };
 
 const CtaSection = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !email) return;
-
-    setStatus('loading');
-
-    try {
-      const { error } = await supabase
-        .from('registrations')
-        .insert([{ name, email }]);
-
-      if (error) {
-        if (error.code === '23505') {
-          alert('This email is already registered.');
-        } else {
-          alert('Failed to register. Please try again.');
-          console.error('Supabase Error:', error);
-        }
-        setStatus('idle');
-      } else {
-        setStatus('success');
-        setName('');
-        setEmail('');
-        setTimeout(() => setStatus('idle'), 4000);
-      }
-    } catch (error) {
-      console.error(error);
-      alert('Network error. Check your connection.');
-      setStatus('idle');
-    }
-  };
-
   return (
     <section className="py-24 px-6 md:px-10 pb-32">
-      <div className="max-w-7xl mx-auto bg-[#4A2411] rounded-[3rem] text-white relative flex flex-col md:flex-row overflow-hidden shadow-2xl border border-white/10 min-h-[500px]">
-
-        {/* Mobile: Full background image. Desktop: Left-side image block */}
-        <div className="absolute inset-0 md:relative md:w-1/2 bg-transparent md:bg-[#FAFAFA] flex items-center justify-center p-0 md:p-8 pointer-events-none md:pointer-events-auto overflow-hidden">
-          <img
-            src="/cta-bg.webp"
-            alt="Hustle Hub Team"
-            className="w-full h-full object-cover md:object-contain drop-shadow-none md:drop-shadow-2xl hover:scale-105 transition-transform duration-700 opacity-30 md:opacity-100 mix-blend-overlay md:mix-blend-normal"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-
-        {/* Right Side: CTA Content */}
-        <div className="md:w-1/2 p-8 md:p-16 flex flex-col justify-center items-center md:items-start text-center md:text-left z-10 relative">
-          <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#F59E0B] rounded-full mix-blend-screen filter blur-[150px] opacity-20 pointer-events-none"></div>
-
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-[12vw] md:text-[6rem] font-bold tracking-tighter leading-none mb-6 font-display"
+            className="text-5xl md:text-7xl font-bold tracking-tighter font-display text-[#4A2411]"
           >
-            Join the<br />Hustle.
+            Get <span className="text-[#F59E0B]">Involved.</span>
           </motion.h2>
+        </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Vendor Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-xl text-white/70 mb-10 max-w-md font-medium"
+            className="rounded-[3rem] p-8 md:p-12 shadow-2xl relative overflow-hidden flex flex-col min-h-[500px] group border border-black/5"
           >
-            Secure your spot as a Student Vendor today!
-          </motion.p>
+            {/* Background Image */}
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              style={{ backgroundImage: 'url(/banner1.jpeg)' }}
+            />
+            {/* Dark Overlay for readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#4A2411]/95 via-[#4A2411]/80 to-[#4A2411]/40" />
 
-          <motion.form
-            onSubmit={handleSubmit}
-            initial={{ opacity: 0, y: 20 }}
+            <div className="flex-grow relative z-10 flex flex-col justify-end">
+              <h3 className="text-4xl font-bold font-display text-white mb-2">Call for Vendors</h3>
+              <p className="text-3xl font-bold text-[#F59E0B] mb-6">GHC 600 <span className="text-lg text-white/60 font-medium">/ stand</span></p>
+              <p className="text-white/80 mb-6 font-medium text-lg leading-relaxed">
+                Secure your spot to showcase your products to thousands of students at the ultimate campus trade fair.
+              </p>
+              <div className="inline-block bg-[#F59E0B]/20 border border-[#F59E0B]/30 text-[#F59E0B] px-4 py-2 rounded-full text-sm font-bold mb-8 self-start backdrop-blur-sm">
+                ✨ Special discount for PU Students!
+              </div>
+              <Link to="/register" className="bg-[#F59E0B] text-white rounded-full px-8 py-4 text-lg font-bold hover:bg-white hover:text-[#4A2411] transition-all duration-300 flex items-center justify-center gap-2 w-full hover:scale-[1.02] shadow-lg shadow-orange-500/30">
+                Book a Stand <ArrowRight size={20} />
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* Sponsor Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="flex flex-col gap-4 w-full relative"
+            className="rounded-[3rem] p-8 md:p-12 shadow-2xl relative overflow-hidden flex flex-col min-h-[500px] group border border-black/5"
           >
-            <AnimatePresence mode="wait">
-              {status === 'success' ? (
-                <motion.div
-                  key="success"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#4A2411] rounded-3xl border border-[#F59E0B]/30"
-                >
-                  <div className="w-16 h-16 bg-[#F59E0B]/20 text-[#F59E0B] rounded-full flex items-center justify-center mb-4">
-                    <Sparkles size={32} />
-                  </div>
-                  <h3 className="text-2xl font-bold font-display text-white mb-2">You're in!</h3>
-                  <p className="text-white/70">Keep an eye on your inbox.</p>
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
+            {/* Background Image */}
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              style={{ backgroundImage: 'url(/banner3.jpeg)' }}
+            />
+            {/* Dark Overlay for readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#4A2411]/95 via-[#4A2411]/80 to-[#4A2411]/40" />
 
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your Name"
-              disabled={status === 'loading'}
-              className="bg-white/5 border border-white/10 rounded-full px-8 py-5 text-lg focus:outline-none focus:border-[#F59E0B] transition-colors w-full placeholder:text-white/30 text-white backdrop-blur-md disabled:opacity-50"
-            />
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email Address"
-              disabled={status === 'loading'}
-              className="bg-white/5 border border-white/10 rounded-full px-8 py-5 text-lg focus:outline-none focus:border-[#F59E0B] transition-colors w-full placeholder:text-white/30 text-white backdrop-blur-md disabled:opacity-50"
-            />
-            <button
-              type="submit"
-              disabled={status === 'loading'}
-              className="bg-[#F59E0B] text-white rounded-full px-10 py-5 text-lg font-bold hover:bg-white hover:text-[#4A2411] transition-all duration-300 flex items-center justify-center gap-2 w-full mt-2 shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100 disabled:hover:bg-[#F59E0B] disabled:hover:text-white"
-            >
-              {status === 'loading' ? (
-                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <>Register Now <ArrowRight size={20} /></>
-              )}
-            </button>
-          </motion.form>
+            <div className="flex-grow relative z-10 flex flex-col justify-end">
+              <h3 className="text-4xl font-bold font-display text-white mb-6">Call for Sponsors</h3>
+              <p className="text-white/80 mb-10 font-medium text-lg leading-relaxed">
+                Your support goes a long way to promote entrepreneurship, innovation, and practical business development among students.
+              </p>
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center gap-4 bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/20">
+                  <div className="w-10 h-10 rounded-full bg-[#F59E0B]/30 flex items-center justify-center">
+                    <Phone size={20} className="text-[#F59E0B]" />
+                  </div>
+                  <span className="font-bold text-xl tracking-wide text-white">055 160 9424</span>
+                </div>
+                <div className="flex items-center gap-4 bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/20">
+                  <div className="w-10 h-10 rounded-full bg-[#F59E0B]/30 flex items-center justify-center">
+                    <Phone size={20} className="text-[#F59E0B]" />
+                  </div>
+                  <span className="font-bold text-xl tracking-wide text-white">059 677 0671</span>
+                </div>
+              </div>
+              <a href="tel:0596770671" className="bg-white text-[#4A2411] rounded-full px-8 py-4 text-lg font-bold hover:bg-[#F59E0B] hover:text-white transition-all duration-300 flex items-center justify-center gap-2 w-full hover:scale-[1.02] shadow-lg">
+                Contact Us <ArrowRight size={20} />
+              </a>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -60,7 +60,7 @@ export default function SplineHero() {
           >
             <div className="spline-hero__info-card">
               <p className="spline-hero__tagline">
-                The ultimate campus trade fair by Pentecost University Comm.&nbsp;Studies.
+                The ultimate campus trade fair by Pentecost University Comm.&nbsp; Department.
               </p>
             </div>
 
