@@ -19,9 +19,13 @@ serve(async (req) => {
   try {
     const payload = await req.json();
 
-    // Verify this is an INSERT trigger payload from Supabase
-    if (payload.type === 'INSERT' && payload.table === 'registrations') {
-      const { name, email } = payload.record;
+    // Handle both direct table names and schema-prefixed table names
+    const table = payload.table || payload.table_name;
+    const type = payload.type || payload.event;
+
+    if (type === 'INSERT' && (table === 'vendors' || table === 'public.vendors')) {
+      const { full_name, email } = payload.record;
+      const name = full_name || payload.record.name; // Fallback just in case
 
       if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
         throw new Error("Missing GMAIL_USER or GMAIL_APP_PASSWORD inside Supabase Secrets");
