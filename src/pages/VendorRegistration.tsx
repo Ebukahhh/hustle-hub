@@ -107,7 +107,8 @@ export default function VendorRegistration() {
           electricity_needed: formData.electricity_needed,
           large_equipment: formData.large_equipment,
           amount_due: formData.amount_due,
-          payment_status: 'pending'
+          payment_status: 'pending',
+          reference_id: null // Will be updated if vendor record is created successfully
         }])
         .select()
         .single();
@@ -122,6 +123,12 @@ export default function VendorRegistration() {
           reference: vendor.id,
         }
       });
+
+      // 3. Store reference_id in the database to link with webhook
+      await supabase
+        .from('vendors')
+        .update({ reference_id: vendor.id })
+        .eq('id', vendor.id);
 
       if (funcError) throw funcError;
 
