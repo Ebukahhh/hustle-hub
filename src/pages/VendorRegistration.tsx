@@ -69,10 +69,9 @@ export default function VendorRegistration() {
   const updateForm = (field: keyof FormData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
-
   const handleVendorTypeSelect = (type: 'PU Student' | 'External Vendor') => {
     updateForm('vendor_type', type);
-    updateForm('amount_due', type === 'PU Student' ? 450 : 600);
+    updateForm('amount_due', type === 'PU Student' ? 400 : 600);
     setTimeout(handleNext, 400);
   };
 
@@ -177,7 +176,7 @@ export default function VendorRegistration() {
                   <GraduationCap size={40} />
                 </div>
                 <h3 className="text-2xl font-bold text-[#4A2411] mb-2">PU Student</h3>
-                <p className="text-3xl font-bold text-[#F59E0B]">GH₵ 450</p>
+                <p className="text-3xl font-bold text-[#F59E0B]">GH₵ 400</p>
                 {formData.vendor_type === 'PU Student' && (
                   <motion.div layoutId="selected-check" className="absolute top-6 right-6 text-[#F59E0B]">
                     <CheckCircle2 size={28} weight="fill" />
