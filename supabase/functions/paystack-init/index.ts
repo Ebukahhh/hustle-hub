@@ -14,7 +14,7 @@ serve(async (req) => {
   }
 
   try {
-    const { email, amount, reference } = await req.json();
+    const { email, amount, reference, callback_url } = await req.json();
 
     if (!PAYSTACK_SECRET_KEY) {
       throw new Error("Missing PAYSTACK_SECRET_KEY in environment variables.");
@@ -27,18 +27,25 @@ serve(async (req) => {
     // Paystack expects amount in pesewas/kobo (multiply by 100)
     const amountInPesewas = amount * 100;
 
+    const paystackBody: any = {
+      email,
+      amount: amountInPesewas,
+      reference,
+      channels: ["card", "mobile_money"],
+    };
+
+    // Include callback_url if provided — this is where Paystack redirects after payment
+    if (callback_url) {
+      paystackBody.callback_url = callback_url;
+    }
+
     const paystackResponse = await fetch("https://api.paystack.co/transaction/initialize", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        email,
-        amount: amountInPesewas,
-        reference,
-        channels: ["card", "mobile_money"],
-      }),
+      body: JSON.stringify(paystackBody),
     });
 
     const data = await paystackResponse.json();

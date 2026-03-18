@@ -120,6 +120,7 @@ export default function VendorRegistration() {
           email: formData.email,
           amount: formData.amount_due,
           reference: vendor.id,
+          callback_url: `${window.location.origin}/payment-callback`,
         }
       });
 
