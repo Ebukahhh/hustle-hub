@@ -1,16 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
-import { Users, LayoutDashboard, Store, Wallet } from 'lucide-react';
+import { Users, LayoutDashboard, Store, Wallet, RefreshCw } from 'lucide-react';
 
 export default function Admin() {
   const [vendors, setVendors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
 
   useEffect(() => {
     if (isAuthenticated) {
       fetchVendors();
+
+      // Subscribe to realtime changes on the vendors table
+      const channel = supabase
+        .channel('vendors-changes')
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'vendors',
+        }, (payload) => {
+          console.log('[Admin] Realtime update received:', payload.eventType);
+          
+          if (payload.eventType === 'INSERT') {
+            setVendors(prev => [payload.new as any, ...prev]);
+          } else if (payload.eventType === 'UPDATE') {
+            setVendors(prev => prev.map(v => 
+              v.id === (payload.new as any).id ? payload.new as any : v
+            ));
+          } else if (payload.eventType === 'DELETE') {
+            setVendors(prev => prev.filter(v => v.id !== (payload.old as any).id));
+          }
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [isAuthenticated]);
 
@@ -24,7 +51,7 @@ export default function Admin() {
     }
   };
 
-  const fetchVendors = async () => {
+  const fetchVendors = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('vendors')
@@ -37,7 +64,13 @@ export default function Admin() {
       console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
+  }, []);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchVendors();
   };
 
   if (!isAuthenticated) {
@@ -63,6 +96,9 @@ export default function Admin() {
     );
   }
 
+  const confirmedCount = vendors.filter(v => v.payment_status === 'confirmed').length;
+  const pendingCount = vendors.filter(v => v.payment_status === 'pending').length;
+
   return (
     <div className="min-h-screen bg-[#FAFAFA] text-[#4A2411] font-sans">
       <nav className="bg-white border-b border-[#4A2411]/10 px-6 py-4 flex justify-between items-center sticky top-0 z-10">
@@ -70,16 +106,24 @@ export default function Admin() {
           <div className="w-10 h-10 bg-[#F59E0B] rounded-full flex items-center justify-center text-white font-bold text-xs">HH</div>
           <span className="font-bold tracking-widest uppercase text-sm">Dashboard</span>
         </div>
+        <button
+          onClick={handleRefresh}
+          disabled={refreshing}
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4A2411]/5 hover:bg-[#F59E0B]/10 text-[#4A2411] font-bold text-sm transition-all disabled:opacity-50"
+        >
+          <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
+          {refreshing ? 'Refreshing...' : 'Refresh'}
+        </button>
       </nav>
 
       <main className="max-w-7xl mx-auto px-6 py-12">
-        <div className="flex justify-between items-center mb-10">
+        <div className="flex flex-wrap justify-between items-center mb-10 gap-4">
           <h1 className="text-4xl font-bold font-display flex items-center gap-3">
             <LayoutDashboard className="text-[#F59E0B]" size={36} />
             Vendor Registrations
           </h1>
           
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-4 bg-white px-6 py-3 rounded-2xl shadow-sm border border-[#4A2411]/5">
               <div className="p-2 bg-[#F59E0B]/10 rounded-xl text-[#F59E0B]">
                 <Users size={24} />
@@ -95,7 +139,27 @@ export default function Admin() {
                 <Wallet size={24} />
               </div>
               <div>
-                <p className="text-sm font-bold text-[#4A2411]/50 uppercase tracking-wider">Confirmed Revenue</p>
+                <p className="text-sm font-bold text-[#4A2411]/50 uppercase tracking-wider">Confirmed</p>
+                <p className="text-2xl font-black text-green-600">{confirmedCount}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 bg-white px-6 py-3 rounded-2xl shadow-sm border border-[#4A2411]/5">
+              <div className="p-2 bg-yellow-500/10 rounded-xl text-yellow-600">
+                <Wallet size={24} />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-[#4A2411]/50 uppercase tracking-wider">Pending</p>
+                <p className="text-2xl font-black text-yellow-600">{pendingCount}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 bg-white px-6 py-3 rounded-2xl shadow-sm border border-[#4A2411]/5">
+              <div className="p-2 bg-green-500/10 rounded-xl text-green-600">
+                <Wallet size={24} />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-[#4A2411]/50 uppercase tracking-wider">Revenue</p>
                 <p className="text-2xl font-black">
                   GH₵ {vendors.filter(v => v.payment_status === 'confirmed').reduce((sum, v) => sum + Number(v.amount_due), 0)}
                 </p>

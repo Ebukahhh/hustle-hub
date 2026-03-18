@@ -40,3 +40,7 @@ CREATE POLICY "Allow public insert to vendors" ON public.vendors
 -- Allow select access (e.g. to verify payment)
 CREATE POLICY "Allow public select on vendors" ON public.vendors
     FOR SELECT USING (true);
+
+-- Allow update access (needed for webhook to update payment_status)
+CREATE POLICY "Allow service update on vendors" ON public.vendors
+    FOR UPDATE USING (true) WITH CHECK (true);
