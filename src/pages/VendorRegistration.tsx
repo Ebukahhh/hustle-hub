@@ -14,7 +14,7 @@ type FormData = {
   industry: string;
   description: string;
   social_handles: string;
-  stand_type: 'Standard Table Stand' | 'Double Table Stand' | 'Space Only (Self-setup)' | '';
+  stand_type: 'Standard Table Stand' | 'Share a Stand' | '';
   electricity_needed: boolean;
   large_equipment: string;
   amount_due: number;
@@ -47,14 +47,14 @@ const industries = [
 
 const standOptions = [
   'Standard Table Stand',
-  'Double Table Stand',
-  'Space Only (Self-setup)'
+  'Share a Stand',
 ] as const;
 
 export default function VendorRegistration() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [agreed, setAgreed] = useState(false);
+  const [sharedStandAgreed, setSharedStandAgreed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -69,15 +69,24 @@ export default function VendorRegistration() {
   const updateForm = (field: keyof FormData, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+  const basePrice = (type: 'PU Student' | 'External Vendor') => type === 'PU Student' ? 400 : 600;
+
   const handleVendorTypeSelect = (type: 'PU Student' | 'External Vendor') => {
     updateForm('vendor_type', type);
-    updateForm('amount_due', type === 'PU Student' ? 400 : 600);
+    updateForm('amount_due', basePrice(type));
     setTimeout(handleNext, 400);
+  };
+
+  const handleStandSelect = (stand: 'Standard Table Stand' | 'Share a Stand') => {
+    updateForm('stand_type', stand);
+    const base = basePrice(formData.vendor_type as 'PU Student' | 'External Vendor');
+    updateForm('amount_due', stand === 'Share a Stand' ? base / 2 : base);
+    if (stand !== 'Share a Stand') setSharedStandAgreed(false);
   };
 
   const isStep2Valid = formData.full_name && formData.phone && formData.email && (formData.vendor_type === 'External Vendor' || formData.student_id);
   const isStep3Valid = formData.business_name && formData.industry && formData.description;
-  const isStep4Valid = formData.stand_type !== '';
+  const isStep4Valid = formData.stand_type !== '' && (formData.stand_type !== 'Share a Stand' || sharedStandAgreed);
 
   const handleSubmit = async () => {
     if (!agreed) {
@@ -404,27 +413,66 @@ export default function VendorRegistration() {
               <div>
                 <label className="block text-sm font-bold text-[#4A2411]/70 uppercase tracking-wider mb-4">Preferred Stand Type *</label>
                 <div className="space-y-4">
-                  {standOptions.map(stand => (
-                    <button
-                      key={stand}
-                      onClick={() => updateForm('stand_type', stand)}
-                      className={`w-full flex items-center p-6 rounded-2xl border-2 text-left transition-all ${
-                        formData.stand_type === stand
-                          ? 'border-[#F59E0B] bg-[#F59E0B]/5 shadow-sm'
-                          : 'border-[#4A2411]/10 hover:border-[#F59E0B]/50 hover:bg-[#FAFAFA]'
-                      }`}
-                    >
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center mr-4 transition-colors ${
-                        formData.stand_type === stand ? 'bg-[#F59E0B] text-white' : 'bg-[#4A2411]/5 text-[#4A2411]/50'
-                      }`}>
-                         <LayoutTemplate size={24} />
-                      </div>
-                      <span className={`text-lg font-bold ${formData.stand_type === stand ? 'text-[#4A2411]' : 'text-[#4A2411]/70'}`}>
-                        {stand}
-                      </span>
-                    </button>
-                  ))}
+                  {standOptions.map(stand => {
+                    const isShare = stand === 'Share a Stand';
+                    const price = isShare
+                      ? (basePrice(formData.vendor_type as 'PU Student' | 'External Vendor') / 2)
+                      : basePrice(formData.vendor_type as 'PU Student' | 'External Vendor');
+                    return (
+                      <button
+                        key={stand}
+                        onClick={() => handleStandSelect(stand as 'Standard Table Stand' | 'Share a Stand')}
+                        className={`w-full flex items-center p-6 rounded-2xl border-2 text-left transition-all ${
+                          formData.stand_type === stand
+                            ? 'border-[#F59E0B] bg-[#F59E0B]/5 shadow-sm'
+                            : 'border-[#4A2411]/10 hover:border-[#F59E0B]/50 hover:bg-[#FAFAFA]'
+                        }`}
+                      >
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center mr-4 shrink-0 transition-colors ${
+                          formData.stand_type === stand ? 'bg-[#F59E0B] text-white' : 'bg-[#4A2411]/5 text-[#4A2411]/50'
+                        }`}>
+                          <LayoutTemplate size={24} />
+                        </div>
+                        <div className="flex-1">
+                          <span className={`text-lg font-bold block ${formData.stand_type === stand ? 'text-[#4A2411]' : 'text-[#4A2411]/70'}`}>
+                            {stand}
+                          </span>
+                          <span className="text-sm font-bold text-[#F59E0B]">GH₵ {price}</span>
+                          {isShare && <span className="ml-2 text-xs text-[#4A2411]/50">Shared with one other business</span>}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
+
+                {/* Share a Stand disclaimer */}
+                <AnimatePresence>
+                  {formData.stand_type === 'Share a Stand' && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <label className="flex items-start gap-4 cursor-pointer mt-6 p-5 bg-[#F59E0B]/5 border border-[#F59E0B]/30 rounded-2xl">
+                        <div className="mt-1 shrink-0">
+                          <input
+                            type="checkbox"
+                            className="peer sr-only"
+                            checked={sharedStandAgreed}
+                            onChange={(e) => setSharedStandAgreed(e.target.checked)}
+                          />
+                          <div className="w-5 h-5 border-2 border-[#F59E0B]/50 rounded flex items-center justify-center peer-checked:bg-[#F59E0B] peer-checked:border-[#F59E0B] transition-all">
+                            <CheckCircle2 size={12} className="text-white opacity-0 peer-checked:opacity-100" />
+                          </div>
+                        </div>
+                        <span className="text-sm text-[#4A2411]/80 leading-relaxed">
+                          <strong className="text-[#4A2411]">Important:</strong> By selecting "Share a Stand", I understand that I will be paired with another registered business by the Hustle Hub organisers. My stand will be labeled either <strong>A</strong> or <strong>B</strong>, and I agree to share the space accordingly.
+                        </span>
+                      </label>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               <div className="pt-4 border-t border-[#4A2411]/10">
