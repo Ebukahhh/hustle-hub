@@ -17,6 +17,10 @@ export default function Admin() {
   const [pairing, setPairing] = useState(false);
   const [pairMessage, setPairMessage] = useState('');
 
+  // Inline stand number editing
+  const [editingStandId, setEditingStandId] = useState<string | null>(null);
+  const [editingStandValue, setEditingStandValue] = useState('');
+
   useEffect(() => {
     if (isAuthenticated) {
       fetchVendors();
@@ -68,6 +72,19 @@ export default function Admin() {
       setRefreshing(false);
     }
   }, []);
+
+  const saveStandNumber = async (vendorId: string) => {
+    const value = editingStandValue.trim();
+    setEditingStandId(null);
+    if (!value) return;
+    const { error } = await supabase
+      .from('vendors')
+      .update({ stand_number: value })
+      .eq('id', vendorId);
+    if (!error) {
+      setVendors(prev => prev.map(v => v.id === vendorId ? { ...v, stand_number: value } : v));
+    }
+  };
 
   const handleRefresh = () => { setRefreshing(true); fetchVendors(); };
 
@@ -253,12 +270,39 @@ export default function Admin() {
                           )}
                         </td>
                         <td className="p-5">
-                          {vendor.stand_number ? (
-                            <div className="flex items-center gap-2">
-                              <span className="text-lg font-black text-[#4A2411]">Stand {vendor.stand_number}{vendor.stand_label}</span>
-                            </div>
+                          {editingStandId === vendor.id ? (
+                            <input
+                              autoFocus
+                              type="text"
+                              value={editingStandValue}
+                              onChange={e => setEditingStandValue(e.target.value)}
+                              onBlur={() => saveStandNumber(vendor.id)}
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') saveStandNumber(vendor.id);
+                                if (e.key === 'Escape') setEditingStandId(null);
+                              }}
+                              placeholder="e.g. 7"
+                              className="w-24 border border-[#F59E0B] rounded-lg px-2 py-1 text-sm font-bold focus:outline-none"
+                            />
                           ) : (
-                            <span className="text-xs text-[#4A2411]/40 italic">Not assigned</span>
+                            <button
+                              onClick={() => {
+                                setEditingStandId(vendor.id);
+                                setEditingStandValue(vendor.stand_number || '');
+                              }}
+                              className="text-left group"
+                              title="Click to assign stand number"
+                            >
+                              {vendor.stand_number ? (
+                                <span className="text-lg font-black text-[#4A2411] group-hover:text-[#F59E0B] transition-colors">
+                                  Stand {vendor.stand_number}{vendor.stand_label}
+                                </span>
+                              ) : (
+                                <span className="text-xs text-[#4A2411]/40 italic group-hover:text-[#F59E0B] transition-colors">
+                                  + Assign stand
+                                </span>
+                              )}
+                            </button>
                           )}
                           {vendor.stand_partner_id && (
                             <div className="flex items-center gap-1 mt-1 text-xs text-green-600 font-bold">
