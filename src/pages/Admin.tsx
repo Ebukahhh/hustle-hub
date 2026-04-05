@@ -21,6 +21,17 @@ export default function Admin() {
   const [editingStandId, setEditingStandId] = useState<string | null>(null);
   const [editingStandValue, setEditingStandValue] = useState('');
 
+  // Inline stand type editing
+  const [editingStandTypeId, setEditingStandTypeId] = useState<string | null>(null);
+  const [editingStandTypeValue, setEditingStandTypeValue] = useState('');
+
+  const standTypes = [
+    'Standard Table Stand',
+    'Share a Stand',
+    'Double Table Stand',
+    'Space Only (Self-setup)'
+  ];
+
   useEffect(() => {
     if (isAuthenticated) {
       fetchVendors();
@@ -83,6 +94,18 @@ export default function Admin() {
       .eq('id', vendorId);
     if (!error) {
       setVendors(prev => prev.map(v => v.id === vendorId ? { ...v, stand_number: value } : v));
+    }
+  };
+
+  const saveStandType = async (vendorId: string, newType: string) => {
+    setEditingStandTypeId(null);
+    if (!newType) return;
+    const { error } = await supabase
+      .from('vendors')
+      .update({ stand_type: newType })
+      .eq('id', vendorId);
+    if (!error) {
+      setVendors(prev => prev.map(v => v.id === vendorId ? { ...v, stand_type: newType } : v));
     }
   };
 
@@ -264,7 +287,33 @@ export default function Admin() {
                         </td>
                         <td className="p-5">
                           <div className="text-sm font-medium">{vendor.vendor_type}</div>
-                          <div className="text-xs text-[#4A2411]/60 mt-1">{vendor.stand_type}</div>
+                          {editingStandTypeId === vendor.id ? (
+                            <select
+                              autoFocus
+                              value={editingStandTypeValue}
+                              onChange={e => {
+                                const newType = e.target.value;
+                                setEditingStandTypeValue(newType);
+                                saveStandType(vendor.id, newType);
+                              }}
+                              onBlur={() => setEditingStandTypeId(null)}
+                              className="mt-1 block w-full text-xs border border-[#F59E0B] rounded px-1 py-1 focus:outline-none"
+                            >
+                              {standTypes.map(type => (
+                                <option key={type} value={type}>{type}</option>
+                              ))}
+                            </select>
+                          ) : (
+                            <div 
+                              className="text-xs text-[#4A2411]/60 mt-1 cursor-pointer hover:text-[#F59E0B] transition-colors"
+                              onClick={() => {
+                                setEditingStandTypeId(vendor.id);
+                                setEditingStandTypeValue(vendor.stand_type);
+                              }}
+                            >
+                              {vendor.stand_type}
+                            </div>
+                          )}
                           {vendor.electricity_needed && (
                             <div className="text-[10px] uppercase font-bold text-[#F59E0B] mt-1 tracking-wider bg-[#F59E0B]/10 inline-block px-2 py-1 rounded">+ Electricity</div>
                           )}
