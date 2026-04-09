@@ -138,12 +138,6 @@ export default function PaymentCallback() {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to="/register"
-                className="inline-flex items-center justify-center gap-2 bg-[#4A2411] text-white rounded-full px-8 py-4 font-bold hover:bg-[#F59E0B] transition-all duration-300"
-              >
-                Try Again
-              </Link>
-              <Link
                 to="/"
                 className="inline-flex items-center justify-center gap-2 bg-white text-[#4A2411] border-2 border-[#4A2411]/20 rounded-full px-8 py-4 font-bold hover:border-[#F59E0B] transition-all duration-300"
               >
