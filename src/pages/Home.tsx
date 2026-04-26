@@ -417,37 +417,33 @@ const CtaSection = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {/* Vendor Card */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="rounded-[3rem] p-8 md:p-12 shadow-2xl relative overflow-hidden flex flex-col min-h-[500px] group border border-black/5"
           >
-            {/* Background Image */}
             <div
               className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
               style={{ backgroundImage: 'url(/banner1.jpeg)' }}
             />
-            {/* Dark Overlay for readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#4A2411]/95 via-[#4A2411]/80 to-[#4A2411]/40" />
 
             <div className="flex-grow relative z-10 flex flex-col justify-end">
-              <h3 className="text-4xl font-bold font-display text-white mb-2">Call for Vendors</h3>
-              <p className="text-3xl font-bold text-[#F59E0B] mb-6">GHC 600 <span className="text-lg text-white/60 font-medium">/ stand</span></p>
+              <h3 className="text-4xl font-bold font-display text-white mb-2">Vendor Registration Closed</h3>
+              <p className="text-3xl font-bold text-[#F59E0B] mb-6">We&apos;re fully booked</p>
               <p className="text-white/80 mb-6 font-medium text-lg leading-relaxed">
-                Secure your spot to showcase your products to thousands of students at the ultimate campus trade fair.
+                We&apos;ve reached our vendor limit for Hustle Hub 2026. Thank you for the incredible interest and support.
               </p>
-              <div className="inline-block bg-[#F59E0B]/20 border border-[#F59E0B]/30 text-[#F59E0B] px-4 py-2 rounded-full text-sm font-bold mb-8 self-start backdrop-blur-sm">
-                ✨ Special discount for PU Students!
+              <div className="inline-block bg-white/10 border border-white/20 text-white px-4 py-2 rounded-full text-sm font-bold mb-8 self-start backdrop-blur-sm">
+                Registrations are now closed
               </div>
-              <Link to="/register" className="bg-[#F59E0B] text-white rounded-full px-8 py-4 text-lg font-bold hover:bg-white hover:text-[#4A2411] transition-all duration-300 flex items-center justify-center gap-2 w-full hover:scale-[1.02] shadow-lg shadow-orange-500/30">
-                Book a Stand <ArrowRight size={20} />
-              </Link>
+              <div className="bg-white/20 text-white/90 rounded-full px-8 py-4 text-lg font-bold flex items-center justify-center gap-2 w-full border border-white/20">
+                Vendor Slots Filled <ArrowRight size={20} />
+              </div>
             </div>
           </motion.div>
 
-          {/* Sponsor Card */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -455,12 +451,10 @@ const CtaSection = () => {
             transition={{ delay: 0.2 }}
             className="rounded-[3rem] p-8 md:p-12 shadow-2xl relative overflow-hidden flex flex-col min-h-[500px] group border border-black/5"
           >
-            {/* Background Image */}
             <div
               className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
               style={{ backgroundImage: 'url(/banner3.jpeg)' }}
             />
-            {/* Dark Overlay for readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#4A2411]/95 via-[#4A2411]/80 to-[#4A2411]/40" />
 
             <div className="flex-grow relative z-10 flex flex-col justify-end">

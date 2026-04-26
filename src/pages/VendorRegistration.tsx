@@ -51,6 +51,7 @@ const standOptions = [
 ] as const;
 
 export default function VendorRegistration() {
+  const registrationsClosed = true;
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [agreed, setAgreed] = useState(false);
@@ -628,6 +629,48 @@ export default function VendorRegistration() {
         return null;
     }
   };
+
+  if (registrationsClosed) {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] flex flex-col font-sans">
+        <header className="px-6 md:px-10 py-6 flex items-center justify-between border-b border-[#4A2411]/5 bg-white sticky top-0 z-50 shadow-sm">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[#F59E0B] text-white font-bold text-xs group-hover:scale-110 transition-transform">HH</div>
+            <span className="font-bold text-[#4A2411] tracking-widest uppercase text-sm hidden sm:block">Hustle Hub</span>
+          </Link>
+          <Link to="/" className="text-sm font-bold text-[#4A2411]/60 hover:text-[#F59E0B] transition-colors">
+            Back to Home
+          </Link>
+        </header>
+
+        <main className="flex-grow flex items-center justify-center px-6 py-16">
+          <div className="w-full max-w-2xl bg-white border border-[#4A2411]/10 rounded-[2rem] shadow-sm p-8 md:p-12 text-center">
+            <div className="w-20 h-20 rounded-full bg-[#F59E0B]/10 text-[#F59E0B] flex items-center justify-center mx-auto mb-6">
+              <Store size={36} />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold font-display text-[#4A2411] mb-4">
+              Vendor Registration Closed
+            </h1>
+            <p className="text-lg text-[#4A2411]/70 leading-relaxed mb-8">
+              We&apos;ve reached our vendor limit for Hustle Hub 2026, so new stand bookings are now closed.
+            </p>
+            <div className="bg-[#F59E0B]/8 border border-[#F59E0B]/20 rounded-3xl p-6 mb-8 text-left">
+              <p className="text-[#4A2411] font-bold mb-2">Thank you for the response.</p>
+              <p className="text-[#4A2411]/70">
+                The turnout has been amazing, and all available vendor spaces have been taken.
+              </p>
+            </div>
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center gap-2 bg-[#4A2411] text-white rounded-full px-8 py-4 font-bold hover:bg-[#F59E0B] transition-all duration-300"
+            >
+              <ArrowLeft size={20} /> Back to Home
+            </Link>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex flex-col font-sans">
